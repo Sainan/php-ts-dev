@@ -1,0 +1,15 @@
+{
+	"name": "php-ts-dev",
+	"version": "0.1.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Sainan/php-ts-dev.git"
+	},
+	"bin": {
+		"php-ts-dev": "php-ts-dev.js"
+	},
+	"dependencies": {
+		"chokidar": "^4.0.3",
+		"ws": "^8.18.3"
+	}
+}
