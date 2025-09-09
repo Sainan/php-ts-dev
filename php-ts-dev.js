@@ -74,7 +74,7 @@ getFreePort().then(phpPort => {
 chokidar.watch(dirs).on("change", changedFile => {
 	changedFile = changedFile.split("\\").join("/");
 	if (!changedFile.endsWith(".ts")
-		&& !changedFile.includes("/.") // ignore Git index changes
+		&& !changedFile.startsWith(".") && !changedFile.includes("/.") // ignore Git index changes
 		) {
 		console.log(`Change to ${changedFile} detected`);
 		if (wsServer) {
