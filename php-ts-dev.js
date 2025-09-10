@@ -30,6 +30,8 @@ let wsServer;
 spawn("npm exec -- tsc --watch" /* --preserveWatchOutput */, {
 	shell: true,
 	stdio: "inherit",
+}).on("exit", (code) => {
+	process.exit(code);
 });
 
 // Start PHP dev server on a free port
