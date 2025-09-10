@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
 const { spawn } = require("child_process");
+const fs = require("fs");
 const http = require("http");
 const net = require("net");
+const path = require("path");
 const chokidar = require("chokidar");
 const { WebSocketServer } = require("ws");
 
@@ -42,6 +44,7 @@ getFreePort().then(phpPort => {
 	spawn("php", ["-S", `127.0.0.1:${phpPort}`], { stdio: "inherit" });
 
 	// Proxy requests to it
+	const injectScript = fs.readFileSync(path.join(__dirname, "inject-script.js"), "utf8");
 	const server = http.createServer((req, res) => {
 		const options = {
 			hostname: "127.0.0.1",
@@ -53,7 +56,7 @@ getFreePort().then(phpPort => {
 		const proxy = http.request(options, (phpRes) => {
 			res.writeHead(phpRes.statusCode, phpRes.headers);
 			if ((phpRes.headers["content-type"] || "").includes("text/html")) {
-				res.write(`<script>(()=>{const ws=new WebSocket("/php-ts-dev-ws");ws.onmessage=()=>{location.reload();};})();</script>`);
+				res.write(`<script>${injectScript}</script>`);
 			}
 			phpRes.pipe(res, { end: true });
 		});
