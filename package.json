@@ -8,8 +8,14 @@
 	"bin": {
 		"php-ts-dev": "php-ts-dev.js"
 	},
+	"scripts": {
+		"prettier": "prettier -w ."
+	},
 	"dependencies": {
 		"chokidar": "^4.0.3",
 		"ws": "^8.18.3"
+	},
+	"devDependencies": {
+		"prettier": "^3.6.2"
 	}
 }

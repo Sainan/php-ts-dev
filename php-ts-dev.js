@@ -13,13 +13,13 @@ let proxyPort = 8080;
 let dirs = ".";
 for (let i = 2; i < process.argv.length; ) {
 	switch (process.argv[i++]) {
-	case "--port":
-		proxyPort = parseInt(process.argv[i++]);
-		break;
+		case "--port":
+			proxyPort = parseInt(process.argv[i++]);
+			break;
 
-	case "--dirs":
-		dirs = process.argv[i++];
-		break;
+		case "--dirs":
+			dirs = process.argv[i++];
+			break;
 	}
 }
 
@@ -27,7 +27,10 @@ for (let i = 2; i < process.argv.length; ) {
 let wsServer;
 
 // Initial compile
-spawn("npm exec -- tsc --watch" /* --preserveWatchOutput */, { shell: true, stdio: "inherit" });
+spawn("npm exec -- tsc --watch" /* --preserveWatchOutput */, {
+	shell: true,
+	stdio: "inherit",
+});
 
 // Start PHP dev server on a free port
 const getFreePort = () => {
@@ -40,11 +43,14 @@ const getFreePort = () => {
 		server.on("error", reject);
 	});
 };
-getFreePort().then(phpPort => {
+getFreePort().then((phpPort) => {
 	spawn("php", ["-S", `127.0.0.1:${phpPort}`], { stdio: "inherit" });
 
 	// Proxy requests to it
-	const injectScript = fs.readFileSync(path.join(__dirname, "inject-script.js"), "utf8");
+	const injectScript = fs.readFileSync(
+		path.join(__dirname, "inject-script.js"),
+		"utf8",
+	);
 	const server = http.createServer((req, res) => {
 		const options = {
 			hostname: "127.0.0.1",
@@ -74,11 +80,13 @@ getFreePort().then(phpPort => {
 	});
 });
 
-chokidar.watch(dirs).on("change", changedFile => {
+chokidar.watch(dirs).on("change", (changedFile) => {
 	changedFile = changedFile.split("\\").join("/");
-	if (!changedFile.endsWith(".ts")
-		&& !changedFile.startsWith(".") && !changedFile.includes("/.") // ignore Git index changes
-		) {
+	if (
+		!changedFile.endsWith(".ts") &&
+		!changedFile.startsWith(".") && // ignore top-level Git index changes
+		!changedFile.includes("/.") // ignore nested Git index changes
+	) {
 		console.log(`Change to ${changedFile} detected`);
 		if (wsServer) {
 			for (const client of wsServer.clients) {

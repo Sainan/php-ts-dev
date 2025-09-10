@@ -3,6 +3,7 @@
 An ergonomic script for developing websites that use PHP and TS.
 
 Specifically, you might be running 2 processes like this:
+
 - `tsc --watch`
 - `php -S 0.0.0.0:8080`
 
