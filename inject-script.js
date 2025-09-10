@@ -18,5 +18,4 @@
 		location.reload();
 	};
 	ws.onclose = ping;
-	ws.onerror = ping;
 })();
